@@ -9,7 +9,7 @@ const term = new Terminal({
     cols: 80,
     theme: {
         foreground: '#e0def4',
-        background: '#232136',
+        background: '#32374A',
         cursor: '#adadad',
         black: '#000000',
         red: '#d81e00',
@@ -46,6 +46,7 @@ alors que pour les petits cela modifie le nombre de lignes et de colonnes visibl
 window.addEventListener('resize', resizeTerminal);
 
 
+
 const socket = new WebSocket(`ws://${window.location.host}/`);
 
 socket.onopen = () => {
@@ -58,6 +59,15 @@ socket.onmessage = (event) => {
     term.write(event.data);
     term.scrollToBottom();
 };
+
+/*--------------------block ctrl----------------------*/
+term.attachCustomKeyEventHandler((event) => {
+    if (event.ctrlKey) {
+        console.log(`Ctrl+${event.key} bloqué !`);
+        return false; // Empêche l'action par défaut
+    }
+    return true;
+});
 
 term.onData((data) => { 
     socket.send(data);
