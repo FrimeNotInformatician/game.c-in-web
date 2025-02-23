@@ -1,9 +1,10 @@
+
 const term = new Terminal({
     fontSize: 20,  
-    fontFamily: 'Fira Code, monospace',
+    fontFamily: 'Fira Code , monospace',    //fontFamily: 'Noto Sans, monospace',
     cursorBlink: true,   // Pour faire clignoter le curseur
     cursorStyle: 'bar',  // Pour avoir une barre verticale
-    lineHeight: 1.25, // Ajuster pour éviter les coupures verticales
+    lineHeight: 1.25, // Ajuster pour éviter les coupure    s verticales
     rows: 17,
     cols: 80,
     theme: {
@@ -22,6 +23,15 @@ const term = new Terminal({
     }
 });
 
+
+function resizeTerminal() {
+    fitAddon.fit();
+    const windowHeight = window.innerHeight;
+    const rough = Math.round(0.0206 * windowHeight - 2.2448);
+    term.resize(term.cols - 1, rough);
+    console.log(' -- Cols:', term.cols, 'Rows:', term.rows, 'heigh', windowHeight, 'Calculated Tows', rough);
+}
+
 const fitAddon = new FitAddon.FitAddon();
 const webglAddon = new WebglAddon.WebglAddon();
 
@@ -29,31 +39,20 @@ const webglAddon = new WebglAddon.WebglAddon();
 term.loadAddon(fitAddon);
 term.loadAddon(webglAddon);
 term.open(document.getElementById('terminal'));
-fitAddon.fit();
+resizeTerminal();
 
 /* fonction pas très bien gérée pour le moment, pour les grands écrans cela zoome dans la page,
 alors que pour les petits cela modifie le nombre de lignes et de colonnes visibles par l'utilisateur et ne modifie pas celle du serveur */
-window.addEventListener('resize', () => {
-   fitAddon.fit();
-   const windowHeight = window.innerHeight;
-   const rough = Math.round(0.0206 * windowHeight - 2.2448);
-   term.resize(term.cols-1, rough);
-   console.log(' -- Cols:', term.cols, 'Rows:', term.rows, 'heigh', windowHeight , 'Calculated Tows', rough);
-});
-
-//prototype
-/*const screenHeight = window.innerHeight;
-
-if (screenHeight >= 1860) {  // Résolution 4K 1862
-    const zoomFactor = 1.5;  // Réduire légèrement le zoom
-    document.body.style.zoom = '1.5';
-} else if (screenHeight >= 1390) {  // Résolution 2K 1396,5
-    const zoomFactor = 1.25; // Un peu plus grand pour 2K
-    document.body.style.transform = `scale(${zoomFactor})`;
-}*/
+window.addEventListener('resize', resizeTerminal);
 
 
 const socket = new WebSocket("ws://localhost:3000");
+
+socket.onopen = () => {
+    setTimeout(() => {
+        socket.send('./program\n');
+    }, 250); // Delay of 1/4 second
+};
 
 socket.onmessage = (event) => {
     term.write(event.data);
@@ -65,3 +64,16 @@ term.onData((data) => {
 });
 
 term.focus();
+
+
+
+/*------------------------prototype------------------------*/
+/*const screenHeight = window.innerHeight;
+
+if (screenHeight >= 1860) {  // Résolution 4K 1862
+    const zoomFactor = 1.5;  // Réduire légèrement le zoom
+    document.body.style.zoom = '1.5';
+} else if (screenHeight >= 1390) {  // Résolution 2K 1396,5
+    const zoomFactor = 1.25; // Un peu plus grand pour 2K
+    document.body.style.transform = `scale(${zoomFactor})`;
+}*/

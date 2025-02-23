@@ -18,7 +18,7 @@ wss.on("connection", (ws) => {
   console.log("Nouvelle connexion WebSocket");
 
   // Créer une instance de terminal
-  const shell = os.platform() === "bash";
+  const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
   const ptyProcess = pty.spawn(shell, [], {
     name: "xterm-color",
     cols: 80,
