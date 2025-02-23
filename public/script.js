@@ -51,7 +51,7 @@ const socket = new WebSocket("ws://localhost:3000");
 socket.onopen = () => {
     setTimeout(() => {
         socket.send('./program\n');
-    }, 250); // Delay of 1/4 second
+    }, 500); // Delay of 1/4 second
 };
 
 socket.onmessage = (event) => {

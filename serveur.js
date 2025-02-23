@@ -23,7 +23,7 @@ wss.on("connection", (ws) => {
     name: "xterm-color",
     cols: 80,
     rows: 17,
-    cwd: process.env.HOME,
+    cwd: __dirname, // Spécifier le répertoire de travail
     env: process.env,
   });
 
