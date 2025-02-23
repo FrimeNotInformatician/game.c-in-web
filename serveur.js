@@ -5,8 +5,8 @@ const pty = require("node-pty");
 
 
 const app = express();
-const server = app.listen(3000, () => {
-  console.log("Serveur démarré sur http://localhost:3000");
+const server = app.listen(3000, "0.0.0.0", () => {
+  console.log("Serveur démarré sur http://0.0.0.0:3000");
 });
 
 // Servir les fichiers statiques (page web avec xterm.js)
@@ -14,7 +14,7 @@ app.use(express.static("public"));
 
 const wss = new WebSocketServer({ server });
 
-wss.on("connection", (ws) => {
+wss.on("connection", (ws) => { 
   console.log("Nouvelle connexion WebSocket");
 
   // Créer une instance de terminal
@@ -23,7 +23,7 @@ wss.on("connection", (ws) => {
     name: "xterm-color",
     cols: 80,
     rows: 17,
-    cwd: __dirname, // Spécifier le répertoire de travail
+    cwd: __dirname, //__dirname
     env: process.env,
   });
 

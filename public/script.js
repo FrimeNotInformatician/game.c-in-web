@@ -46,7 +46,7 @@ alors que pour les petits cela modifie le nombre de lignes et de colonnes visibl
 window.addEventListener('resize', resizeTerminal);
 
 
-const socket = new WebSocket("ws://localhost:3000");
+const socket = new WebSocket(`ws://${window.location.host}/`);
 
 socket.onopen = () => {
     setTimeout(() => {
