@@ -47,7 +47,7 @@ window.addEventListener('resize', resizeTerminal);
 
 
 
-const socket = new WebSocket(`ws://${window.location.host}/`);
+const socket = new WebSocket(`wss://${window.location.host}/`);
 
 socket.onopen = () => {
     setTimeout(() => {
