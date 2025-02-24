@@ -47,7 +47,7 @@ window.addEventListener('resize', resizeTerminal);
 
 
 
-const socket = new WebSocket(`wss://${window.location.host}/`);
+const socket = new WebSocket(`wss://${window.location.host}/`); //wss for HTTPS
 
 socket.onopen = () => {
     setTimeout(() => {
@@ -59,15 +59,14 @@ socket.onmessage = (event) => {
     term.write(event.data);
     term.scrollToBottom();
 };
-
 /*--------------block all else SPACE & ENTER----------------*/
 term.attachCustomKeyEventHandler((event) => {
-    if (event.key !== "Enter" || event.key !== " ") {
-        event.preventDefault(); 
-        return false; 
+    if (!(event.key === ' ' || event.key === 'Enter')) {  //Si la touche n'est pas : espace ou entrée
+        console.log(`Touche ${event.key} bloquée !`);
+        return false; // Empêche l'action 
     }
-    return true;
-})
+    return true; 
+});
 
 term.onData((data) => { 
     socket.send(data);
