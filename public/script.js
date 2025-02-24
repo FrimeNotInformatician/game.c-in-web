@@ -23,6 +23,10 @@ const term = new Terminal({
     }
 });
 
+const fitAddon = new FitAddon.FitAddon();
+const webglAddon = new WebglAddon.WebglAddon();
+
+let socket;
 
 function resizeTerminal() {
     fitAddon.fit();
@@ -32,8 +36,14 @@ function resizeTerminal() {
     console.log(' -- Cols:', term.cols, 'Rows:', term.rows, 'heigh', windowHeight, 'Calculated Tows', rough);
 }
 
-const fitAddon = new FitAddon.FitAddon();
-const webglAddon = new WebglAddon.WebglAddon();
+function connectWebSocket() {
+    socket = new WebSocket("wss://votre-serveur-websocket");
+
+    socket.onopen = function(event) {
+        console.log("Connexion WebSocket établie");
+    };
+
+
 
 
 term.loadAddon(fitAddon);
@@ -44,10 +54,17 @@ resizeTerminal();
 /* fonction pas très bien gérée pour le moment, pour les grands écrans cela zoome dans la page,
 alors que pour les petits cela modifie le nombre de lignes et de colonnes visibles par l'utilisateur et ne modifie pas celle du serveur */
 window.addEventListener('resize', resizeTerminal);
+    
+/*--------------block all else SPACE & ENTER----------------*/
+term.attachCustomKeyEventHandler((event) => {
+    if (!(event.key === ' ' || event.key === 'Enter')) {  //Si la touche n'est pas : espace ou entrée
+        console.log(`Touche ${event.key} bloquée !`);
+        return false; // Empêche l'action 
+    }
+    return true; 
+});
 
-
-
-const socket = new WebSocket(`wss://${window.location.host}/`); //wss for HTTPS
+connectWebSocket();
 
 socket.onopen = () => {
     setTimeout(() => {
@@ -59,18 +76,20 @@ socket.onmessage = (event) => {
     term.write(event.data);
     term.scrollToBottom();
 };
-/*--------------block all else SPACE & ENTER----------------*/
-term.attachCustomKeyEventHandler((event) => {
-    if (!(event.key === ' ' || event.key === 'Enter')) {  //Si la touche n'est pas : espace ou entrée
-        console.log(`Touche ${event.key} bloquée !`);
-        return false; // Empêche l'action 
-    }
-    return true; 
-});
+
 
 term.onData((data) => { 
     socket.send(data);
 });
+
+socket.onclose = function(event) {
+        console.log("Connexion WebSocket fermée", event);
+        // Vérifiez si la déconnexion était anormale et essayez de reconnecter
+        if (!event.wasClean) {
+            console.log("Tentative de reconnexion...");
+            setTimeout(connectWebSocket, 1000); // Réessayer après 1 seconde
+        }
+    };
 
 term.focus();
 
