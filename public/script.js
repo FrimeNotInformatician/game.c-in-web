@@ -60,14 +60,14 @@ socket.onmessage = (event) => {
     term.scrollToBottom();
 };
 
-/*--------------------block ctrl----------------------*/
+/*--------------block all else SPACE & ENTER----------------*/
 term.attachCustomKeyEventHandler((event) => {
-    if (event.ctrlKey) {
-        console.log(`Ctrl+${event.key} bloqué !`);
-        return false; // Empêche l'action par défaut
+    if (event.key !== "Enter" || event.key !== " ") {
+        event.preventDefault(); 
+        return false; 
     }
     return true;
-});
+})
 
 term.onData((data) => { 
     socket.send(data);
