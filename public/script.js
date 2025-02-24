@@ -37,11 +37,12 @@ function resizeTerminal() {
 }
 
 function connectWebSocket() {
-    socket = new WebSocket("wss://votre-serveur-websocket");
+    socket = new WebSocket(`wss://${window.location.host}/`);
 
     socket.onopen = function(event) {
         console.log("Connexion WebSocket établie");
     };
+}
 
 
 
