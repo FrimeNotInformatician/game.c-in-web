@@ -22,6 +22,13 @@ body {
     flex-direction: column;
 }
 
+/* Ajustement pour les téléphones */
+@media screen and (max-width: 768px) {
+    #terminal-container {
+        width: 90vw;
+        max-width: 90%;
+    }
+}
 
 
 #terminal-header {
