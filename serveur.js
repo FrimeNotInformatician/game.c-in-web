@@ -32,10 +32,18 @@ wss.on("connection", (ws) => {
     ws.send(data);
   });
 
-  // Recevoir les commandes du client et les exécuter
-  ws.on("message", (msg) => {
-    ptyProcess.write(msg);
-  });
+  // Recevoir les commandes du clien, les filtrer puis les exécuter
+    ws.on("message", (msg) => {
+      // Converted in  string
+      const message = msg.toString();
+    
+      if (message === "\n" || message === "\r" || message === " " || message === "./program\n" || message ==="clear\n") {
+        ptyProcess.write(message);
+      }else {
+        console.log("Message Bloquée:", JSON.stringify(message));
+      }
+    });
+
 
   ws.on("close", () => {
     ptyProcess.kill();
