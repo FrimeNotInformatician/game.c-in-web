@@ -66,12 +66,12 @@ window.addEventListener('resize', resizeTerminal);
     
 /*--------------block all else SPACE & ENTER----------------*/
 term.attachCustomKeyEventHandler((event) => {
-    if (!(event.key === ' ' || event.key === 'Enter')) {  //Si la touche n'est pas : espace ou entrée
-        console.log(`Touche ${event.key} bloquée !`);
+    if (!(event.code  === 'Space' || event.key === 'Enter' || event.key === 'Unidentified')) {  //'Unidentified' for mobile 
         return false; // Empêche l'action 
     }
     return true; 
 });
+;
 
 connectWebSocket();
 
