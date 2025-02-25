@@ -29,6 +29,14 @@ const webglAddon = new WebglAddon.WebglAddon();
 let socket;
 
 function resizeTerminal() {
+    if (window.innerWidth < 768) {   
+        term.options.fontSize = 13; // Modifier la taille de la police
+    } else {
+        term.options.fontSize = 20; // Remettre la police par défaut pour les grands écrans
+    }
+
+    term.refresh(0, term.rows - 1); // Forcer le rafraîchissement du terminal
+    
     fitAddon.fit();
     const windowHeight = window.innerHeight;
     const rough = Math.round(0.0206 * windowHeight - 2.2448);
