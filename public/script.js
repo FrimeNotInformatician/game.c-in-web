@@ -69,6 +69,7 @@ connectWebSocket();
 
 socket.onopen = () => {
     setTimeout(() => {
+        socket.send('clear\n');
         socket.send('./program\n');
     }, 500); // Delay of 1/4 second
 };
