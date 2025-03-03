@@ -30,6 +30,10 @@ body {
     }
 }
 
+#terminal .xterm-viewport::-webkit-scrollbar {
+    display: none;
+}
+
 
 #terminal-header {
     height: 30px;
